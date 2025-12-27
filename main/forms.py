@@ -11,12 +11,10 @@ class ExpenseForm(forms.ModelForm):
                 'class': 'form-control',
                 'style': 'max-width: 500px'
             }),
-            # TUZATILDI: DecimalField o'rniga NumberInput ishlatildi
             'amount': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Summani kiriting'
             }),
-            # description to'g'ri edi, lekin style qo'shdik
             'description': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Izoh'
@@ -35,7 +33,6 @@ class CategoryForm(forms.ModelForm):
         fields = ['name']
 
         widgets = {
-            # TUZATILDI: CharField o'rniga TextInput ishlatildi
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Kategoriya nomi'

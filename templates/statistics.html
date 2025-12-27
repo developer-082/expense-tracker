@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+
 {% block content %}
+
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card text-white bg-info mb-3">
@@ -27,9 +29,27 @@
     </div>
 </div>
 
+<div class="row mb-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary text-center">Haftalik Xarajatlar Statistikasi</h6>
+            </div>
+            <div class="card-body">
+                <div style="height: 300px; position: relative;">
+                    <canvas id="expensePieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-md-8">
-        <h4>Bugungi amallar</h4>
+    <div class="col-12"> <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Bugungi amallar</h4>
+            <a href="{% url 'expense_create' %}" class="btn btn-primary">+ Harajat qo'shish</a>
+        </div>
+        
         <ul class="list-group">
             {% for expense in today_expenses %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -40,21 +60,56 @@
                 <span class="badge bg-danger rounded-pill">- {{ expense.amount }}</span>
             </li>
             {% empty %}
-            <li class="list-group-item">Bugun harajat qilinmadi.</li>
+            <li class="list-group-item text-center py-3">Bugun harajat qilinmadi.</li>
             {% endfor %}
         </ul>
-    </div>
-    <div class="col-md-4">
-        <h4>Kategoriyalar bo'yicha</h4>
-        <ul class="list-group">
-            {% for cat in categories %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ cat.name }}
-                <span class="badge bg-secondary">{{ cat.total|default:"0" }}</span>
-            </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'expense_create' %}" class="btn btn-primary mt-3 w-100">+ Harajat qo'shish</a>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('expensePieChart').getContext('2d');
+        
+        const labels = {{ category_labels|safe }};
+        const data = {{ category_data|safe }};
+
+        new Chart(ctx, {
+            type: 'doughnut', // Yoki 'pie'
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', 
+                        '#858796', '#5a5c69', '#f8f9fc'
+                    ],
+                    hoverBackgroundColor: [
+                        '#2e59d9', '#17a673', '#2c9faf', '#dda20a', '#be2617', 
+                        '#60616f', '#373840', '#c2cbe5'
+                    ],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+            },
+        });
+    });
+</script>
+
 {% endblock %}

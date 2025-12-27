@@ -22,14 +22,13 @@ from main.views import statistics, expense_delete, expense_create, expense_updat
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
     # Auth
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('signup/', signup_view, name='signup'),
 
     # Asosiy app
-    path('admin/', admin.site.urls),
     path('', statistics, name='dashboard'),
 
     path('home/', home, name='home'),
@@ -38,7 +37,7 @@ urlpatterns = [
     path('expense/update/<int:pk>/', expense_update, name='expense_update'),
 
     path('categories/', categories, name='categories'),
-    path('categories/create/', category_create, name='category_creat'),
+    path('categories/create/', category_create, name='category_create'),
     path('categories/delete/<int:pk>/', category_delete, name='category_delete'),
     path('categories/update/<int:pk>/', category_update, name='category_update')
 ]
