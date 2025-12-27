@@ -8,18 +8,26 @@ class ExpenseForm(forms.ModelForm):
 
         widgets = {
             'category': forms.Select(attrs={
-                'class':'form-control',
+                'class': 'form-control',
                 'style': 'max-width: 500px'
             }),
-            'amount': forms.DecimalField(max_digits=12, decimal_places=2),
-            'description': forms.TextInput()
+            # TUZATILDI: DecimalField o'rniga NumberInput ishlatildi
+            'amount': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Summani kiriting'
+            }),
+            # description to'g'ri edi, lekin style qo'shdik
+            'description': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Izoh'
+            })
         }
  
     def __init__(self, *args, **kwargs):
         user1 = kwargs.pop('user', None)
         super(ExpenseForm, self).__init__(*args, **kwargs)
         if user1:
-            self.fields['category'].queryset = Category.objects.filter(user = user1)
+            self.fields['category'].queryset = Category.objects.filter(user=user1)
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -27,8 +35,13 @@ class CategoryForm(forms.ModelForm):
         fields = ['name']
 
         widgets = {
-            'name': forms.CharField(max_length=100)
+            # TUZATILDI: CharField o'rniga TextInput ishlatildi
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Kategoriya nomi'
+            })
         }
  
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(CategoryForm, self).__init__(*args, **kwargs)

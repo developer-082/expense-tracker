@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card border-danger shadow">
+            <div class="card-header bg-danger text-white">
+                O'chirishni tasdiqlash
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title">Haqiqatan ham ushbu harajatni o'chirmoqchimisiz?</h5>
+                <p class="card-text border p-2 rounded bg-light">
+                    <strong>{{ expense.category.name }}</strong>: {{ expense.amount }} so'm <br>
+                    <small text-muted>{{ expense.description }}</small>
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Yo'q, qaytish</a>
+                    <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

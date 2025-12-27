@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card border-danger shadow">
+            <div class="card-header bg-danger text-white">
+                Kategoriyani o'chirish
+            </div>
+            <div class="card-body text-center">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Diqqat!</strong> Agar ushbu kategoriyani o'chirsangiz, unga bog'liq barcha harajatlar ham o'chib ketishi mumkin (Database sozlamasiga qarab).
+                </div>
+                
+                <h4>{{ category.name }}</h4>
+                <p>Ushbu kategoriyani o'chirishga ishonchingiz komilmi?</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <a href="{% url 'categories' %}" class="btn btn-secondary">Bekor qilish</a>
+                    <button type="submit" class="btn btn-danger">O'chirish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

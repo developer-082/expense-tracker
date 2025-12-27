@@ -25,16 +25,16 @@ def category_update(request, pk):
     category = get_object_or_404(Category, pk=pk)
 
     if category.user != request.user:
-        return redirect('categories/')
+        return redirect('categories')
     
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST, instance=category)
 
         if form.is_valid():
             form.save()
-            return redirect('categories/')
+            return redirect('categories')
     else:
-        form = CategoryForm(instanse=category, user=request.user)
+        form = CategoryForm(instance=category, user=request.user)
     
     return render(request, 'add_category.html', {'form':form})
 
@@ -78,7 +78,7 @@ def expense_update(request, pk):
             form.save()
             return redirect('home')
     else:
-        form = ExpenseForm(instanse=expense, user=request.user)
+        form = ExpenseForm(instance=expense, user=request.user)
     
     return render(request, 'add_expense.html', {'form':form})
 
@@ -100,16 +100,16 @@ def statistics(request):
     today = timezone.now().date()
     week = today - timedelta(days = 7)
 
-    bugungi_harajatlar = Expense.objects.filter(user = request.user, created_at = today).order_by('created_at')
-    bugungi_harajatlar_summasi = Expense.objects.filter(user = request.user, created_at = today).aggregate(Sum('amount'))
+    bugungi_harajatlar = Expense.objects.filter(user = request.user, created_at__date = today).order_by('created_at')
+    bugungi_harajatlar_summasi = bugungi_harajatlar.aggregate(Sum('amount'))['amount__sum'] or 0
 
-    haftalik_harajatlar = Expense.objects.filter(user = request.user, created_at__gte = week).order_by('created_at')
-    haftalik_harajatlar_summasi = Expense.objects.filter(user = request.user, created_at__gte = week).aggregate(Sum('amount'))
+    haftalik_harajatlar = Expense.objects.filter(user = request.user, created_at__date__gte = week).order_by('created_at')
+    haftalik_harajatlar_summasi = haftalik_harajatlar.aggregate(Sum('amount'))['amount__sum'] or 0
 
     oylik_harajatlar = Expense.objects.filter(user = request.user, created_at__month = today.month, created_at__year = today.year).order_by('created_at')
-    oylik_harajatlar_summasi = Expense.objects.filter(user = request.user, created_at__month = today.month, created_at__year = today.year).aggregate(Sum('amount'))
+    oylik_harajatlar_summasi = oylik_harajatlar.aggregate(Sum('amount'))['amount__sum'] or 0
     
-    categories = Category.objects.filter(user = request.user).annotate(total = Sum('expenses__amount'))
+    categories = Category.objects.filter(user = request.user).annotate(total=Sum('expenses__amount'))
 
     data = {
         'today_expenses': bugungi_harajatlar,

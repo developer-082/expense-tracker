@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Bugungi Harajat</h5>
+                <h2>{{ today_sum|default:"0" }} so'm</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Haftalik Harajat</h5>
+                <h2>{{ week_sum|default:"0" }} so'm</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Oylik Harajat</h5>
+                <h2>{{ month_sum|default:"0" }} so'm</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>Bugungi amallar</h4>
+        <ul class="list-group">
+            {% for expense in today_expenses %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ expense.category.name }}</strong>
+                    <small class="text-muted d-block">{{ expense.description }}</small>
+                </div>
+                <span class="badge bg-danger rounded-pill">- {{ expense.amount }}</span>
+            </li>
+            {% empty %}
+            <li class="list-group-item">Bugun harajat qilinmadi.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h4>Kategoriyalar bo'yicha</h4>
+        <ul class="list-group">
+            {% for cat in categories %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ cat.name }}
+                <span class="badge bg-secondary">{{ cat.total|default:"0" }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'expense_create' %}" class="btn btn-primary mt-3 w-100">+ Harajat qo'shish</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    {% if form.instance.pk %}
+                        Harajatni tahrirlash
+                    {% else %}
+                        Yangi harajat qo'shish
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        {% if field.errors %}
+                            {{ field|add_class:"form-control is-invalid" }}
+                            <div class="invalid-feedback">
+                                {{ field.errors|first }}
+                            </div>
+                        {% else %}
+                            {{ field|add_class:"form-control" }}
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-secondary">Bekor qilish</a>
+                        <button type="submit" class="btn btn-success">Saqlash</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
